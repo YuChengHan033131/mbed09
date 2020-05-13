@@ -47,14 +47,70 @@ void LEDControl (Arguments *in, Reply *out)   {
     // Have code here to call another RPC function to wake up specific led or close it.
     char buffer[200], outbuf[256];
     char strings[20];
-    int led = x;
-    int on = y;
-    int n = sprintf(strings, "/myled%d/write %d", led, on);
-    strcpy(buffer, strings);
-    RPC::call(buffer, outbuf);
-    if (success) {
-        out->putData(buffer);
-    } else {
-        out->putData("Failed to execute LED control.");
+    Timer t;
+    Timer j;
+    j.start();
+    t.start();
+    if(x==4){
+        t.reset();
+        while(t.read()<10){
+            sprintf(strings, "/myled2/write 1");
+            strcpy(buffer, strings);
+            RPC::call(buffer, outbuf);
+            if (success) {
+                out->putData(buffer);
+            } else {
+                out->putData("Failed to execute LED control.");
+            }
+            sprintf(strings, "/myled3/write 1");
+            strcpy(buffer, strings);
+            RPC::call(buffer, outbuf);
+            if (success) {
+                out->putData(buffer);
+            } else {
+                out->putData("Failed to execute LED control.");
+            }
+            sprintf(strings, "/myled1/write 0");
+            strcpy(buffer, strings);
+            RPC::call(buffer, outbuf);
+            if (success) {
+                out->putData(buffer);
+            } else {
+                out->putData("Failed to execute LED control.");
+            }
+            j.reset();
+            while(j.read()<1){};
+            sprintf(strings, "/myled3/write 0");
+            strcpy(buffer, strings);
+            RPC::call(buffer, outbuf);
+            if (success) {
+                out->putData(buffer);
+            } else {
+                out->putData("Failed to execute LED control.");
+            }
+            sprintf(strings, "/myled1/write 1");
+            strcpy(buffer, strings);
+            RPC::call(buffer, outbuf);
+            if (success) {
+                out->putData(buffer);
+            } else {
+                out->putData("Failed to execute LED control.");
+            }
+            j.reset();
+            while(j.read()<1){};
+        }
+
+    }else{
+        int led = x;
+        int on = y;
+        int n = sprintf(strings, "/myled%d/write %d", led, on);
+        strcpy(buffer, strings);
+        RPC::call(buffer, outbuf);
+        if (success) {
+            out->putData(buffer);
+        } else {
+            out->putData("Failed to execute LED control.");
+        }
     }
+    
 }
